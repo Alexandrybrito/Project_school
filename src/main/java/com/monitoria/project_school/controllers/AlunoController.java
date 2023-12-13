@@ -13,40 +13,38 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.monitoria.project_school.model.Aluno;
-import com.monitoria.project_school.repositories.AlunoRepository;
+import com.monitoria.project_school.services.AlunoService;
 
 @RestController
 @RequestMapping(value = "/aluno")
 public class AlunoController {
 	
 	@Autowired
-	private AlunoRepository repository;
+	private AlunoService alunoService;
 	
 	@GetMapping
 	public List<Aluno> findAll() {
-		List<Aluno> todos = repository.findAll();
-		return todos;	
+		List<Aluno> buscarTodos = alunoService.buscarTodos();
+		return buscarTodos;	
 	}
 	
 	@GetMapping(value = "/{id}")
 	public Aluno findById(@PathVariable Integer id) {
-		Aluno umPorVez = repository.findById(id).get();
-		return umPorVez;
+		return alunoService.buscarPorId(id);	
 	}
 	
 	@PostMapping
-	public Aluno insert(@RequestBody Aluno aluno) {
-		Aluno salvaNovoAluno = repository.save(aluno);
-		return salvaNovoAluno;
+	public void inserir(@RequestBody Aluno aluno) {
+		alunoService.salvarAtualizar(aluno);
 	}
 
 	@DeleteMapping(value = "/{id}")
 	public void RemoveAluno(@PathVariable Integer id) {
-		repository.deleteById(id);
+		alunoService.removePorId(id);
 	}
 	
 	@PutMapping("/aluno")
-	public Aluno atualizar(@RequestBody Aluno aluno) {
-		return repository.save(aluno);
+	public void atualizar(@RequestBody Aluno aluno) {
+		alunoService.salvarAtualizar(aluno);
 	}
 }
